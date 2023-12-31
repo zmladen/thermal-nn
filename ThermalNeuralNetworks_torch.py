@@ -470,7 +470,8 @@ class TNNCell(nn.Module):
 
         # To multiply [4] *  [66, 4] broadcasting is applied. Similar to substraction!
         # vector [4] is coppies 66 times to make new vector [66, 4]. Each row is the same! Then [66, 4] and [66, 4] is multiplied elementwise.
-        out = prev_out + self.sample_time * torch.exp(self.caps) * (temp_diffs + power_loss)
+        # out = prev_out + self.sample_time * torch.exp(self.caps) * (temp_diffs + power_loss)
+        out = prev_out + self.sample_time * torch.pow(10, self.caps) * (temp_diffs + power_loss)
         
         # torch.exp(self.caps): [4]
         # out:                  [66, 4]
