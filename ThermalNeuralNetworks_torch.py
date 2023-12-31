@@ -491,6 +491,10 @@ class TNNCell(nn.Module):
 train = True
 
 if train:
+
+    if not os.path.exists('outputs'):
+        os.makedirs('outputs')
+
     # Your model definition, presumably a differential equation layer with a specific cell type.
     # torch.jit.script is used for optimizing the model for faster execution.
     model = torch.jit.script(DiffEqLayer(TNNCell).to(device))
@@ -564,8 +568,8 @@ if train:
             current_loss = loss.item()
             if current_loss < lowest_loss:
                 lowest_loss = current_loss
-                torch.save(model.state_dict(), 'model_with_lowest_loss.pth')
-
+                torch.save(model.state_dict(), 'outputs/model_with_lowest_loss.pth')
+                
             # Append the loss of the current epoch to the list
             epoch_losses.append(loss.item())
 
@@ -575,7 +579,7 @@ if train:
             ax.relim()  # Recalculate limits
             ax.autoscale_view(True, True, True)  # Rescale the view
             plt.pause(0.1)  # Pause to update the plot
-            plt.savefig('loss_plot.png')
+            plt.savefig(os.path.join('outputs', 'loss_plot.png'))
 
 
             # Reduce learning rate after a certain number of epochs.
@@ -589,7 +593,7 @@ if train:
 
 else:
     # Load the saved model state
-    model_path = '.\model_with_lowest_loss.pth'  # Replace with your model's file path
+    model_path = '.\outputs\model_with_lowest_loss.pth'  # Replace with your model's file path
     model = torch.jit.script(DiffEqLayer(TNNCell).to(device))  # Create a model instance
     model.load_state_dict(torch.load(model_path))  # Load the trained weights
     model.eval()  # Set the model to evaluation mode
@@ -619,8 +623,7 @@ for i, (pid, y_test) in enumerate(data.loc[data.profile_id.isin(test_profiles), 
             ax.set_title(col)
 
 # Save the figure to a file
-plt.savefig('test_data.png')
-
+plt.savefig(os.path.join('outputs', 'test_data.png'))
 plt.show()
 
 ## Just for testing!!!
