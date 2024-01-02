@@ -640,4 +640,6 @@ plt.show()
 # diff_eq_layer = DiffEqLayer(tnn_cell)
 # output, new_hidden_state = diff_eq_layer(inp, hidden)
 
+# Hello from DELL
+
 
